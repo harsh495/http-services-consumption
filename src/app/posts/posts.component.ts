@@ -29,4 +29,12 @@ export class PostsComponent  {
           this.posts.splice(0, 0, post);
         });
   }
+
+  updatePost(post: any){
+      post.title = "harsh";
+      this.http.put(this.url + '/' + post.id, post)
+        .subscribe(response => {
+          console.log(response);
+        });
+  }
 }
