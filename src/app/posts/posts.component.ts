@@ -37,4 +37,12 @@ export class PostsComponent  {
           console.log(response);
         });
   }
+
+  deletePost(post: any){
+    this.http.delete(this.url + '/' + post.id)
+      .subscribe(response => {
+        console.log(response);
+        this.posts.splice(this.posts.indexOf(post), 1);
+      });
+  }
 }
