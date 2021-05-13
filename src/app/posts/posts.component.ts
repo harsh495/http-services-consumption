@@ -8,13 +8,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PostsComponent  {
 
+  url = 'https://jsonplaceholder.typicode.com/posts';
   posts : any[];
 
-  constructor(http: HttpClient){
-    http.get('https://jsonplaceholder.typicode.com/posts')
+  constructor(private http: HttpClient){
+    http.get(this.url)
       .subscribe((response: any) => {
           console.log(response);
           this.posts = response;
       });
+  }
+
+  createPost(input: HTMLInputElement){
+    let post: any = {title: input.value};
+    input.value = '';           // if not written then after pressing enter previous value is shown...
+
+      this.http.post(this.url, post)
+        .subscribe((response) =>{
+          console.log(response);
+          this.posts.splice(0, 0, post);
+        });
   }
 }
