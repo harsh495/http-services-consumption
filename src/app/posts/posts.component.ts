@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Component, OnInit } from '@angular/core';
+import { PostsService } from '../services/posts.service';
 
 @Component({
   selector: 'app-posts',
@@ -8,12 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PostsComponent  {
 
-  url = 'https://jsonplaceholder.typicode.com/posts';
+  
   posts : any[];
 
-  constructor(private http: HttpClient){
-    http.get(this.url)
-      .subscribe((response: any) => {
+  constructor(private service: PostsService){
+    
+      service.getPosts().subscribe((response: any) => {
           console.log(response);
           this.posts = response;
       });
@@ -22,27 +23,23 @@ export class PostsComponent  {
   createPost(input: HTMLInputElement){
     let post: any = {title: input.value};
     input.value = '';           // if not written then after pressing enter previous value is shown...
-
-      this.http.post(this.url, post)
-        .subscribe((response) =>{
-          console.log(response);
-          this.posts.splice(0, 0, post);
-        });
+    this.service.createPosts(post).subscribe((response) =>{
+      console.log(response);
+      this.posts.splice(0, 0, post);
+    });
   }
 
   updatePost(post: any){
-      post.title = "harsh";
-      this.http.put(this.url + '/' + post.id, post)
-        .subscribe(response => {
-          console.log(response);
-        });
+    post.title = "harsh";
+    this.service.updatePosts(post).subscribe(response => {
+      console.log(response);
+    });
   }
 
   deletePost(post: any){
-    this.http.delete(this.url + '/' + post.id)
-      .subscribe(response => {
-        console.log(response);
-        this.posts.splice(this.posts.indexOf(post), 1);
-      });
+    this.service.deletePosts(post).subscribe(response => {
+      console.log(response);
+      this.posts.splice(this.posts.indexOf(post), 1);
+    });
   }
 }
